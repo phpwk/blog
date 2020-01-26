@@ -1,4 +1,4 @@
-baseurl = "https://prasetiyohadi.gitlab.io/blog/"
+baseurl = "/"
 title = "prasetiyohadi@Gitlab"
 theme = "ghostwriter"
 languageCode = "en-us"
