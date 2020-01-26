@@ -54,7 +54,7 @@ googleAnalytics = "UA-20150048-7"
     fathomSiteId = ""
 
 [Permalinks]
-    post = "/:filename/"
+    post = "/:year/:month/:day/:filename/"
 
 [[menu.main]]
     name = "Blog"
