@@ -1,4 +1,4 @@
-baseurl = ""
+baseurl = "/"
 title = "prasetiyohadi@Gitlab"
 theme = "ghostwriter"
 languageCode = "en-us"
@@ -54,7 +54,7 @@ googleAnalytics = "UA-20150048-7"
     fathomSiteId = ""
 
 [Permalinks]
-    post = "/:year/:month/:day/:filename/"
+    post = "/:filename/"
 
 [[menu.main]]
     name = "Blog"
