@@ -1,5 +1,5 @@
-baseurl = "/"
-title = "prasetiyohadi@Github"
+baseurl = "https://prasetiyohadi.gitlab.io/blog/"
+title = "prasetiyohadi@Gitlab"
 theme = "ghostwriter"
 languageCode = "en-us"
 copyright = "Prasetiyo Hadi Purwoko"
@@ -26,7 +26,7 @@ googleAnalytics = "UA-20150048-7"
 [Params]
     mainSections = ["post"]
     intro = true
-    headline = "prasetiyohadi@Github"
+    headline = "prasetiyohadi@Gitlab"
     description = "Devops/Sysadmin. Linux/UNIX Enthusiast. Jakarta, Indonesia"
     github = "https://github.com/prasetiyohadi"
     gitlab = "https://gitlab.com/prasetiyohadi"
