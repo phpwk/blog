@@ -1,19 +1,18 @@
-image: registry.gitlab.com/pages/hugo:latest
-
+image: docker.io/hugomods/hugo:go-git
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
-
 test:
   script:
-  - hugo
+    - apk add --update --no-cache go
+    - hugo
   except:
-  - master
-
+    - master
 pages:
   script:
-  - hugo
+    - apk add --update --no-cache go
+    - hugo
   artifacts:
     paths:
-    - public
+      - public
   only:
-  - master
+    - master
