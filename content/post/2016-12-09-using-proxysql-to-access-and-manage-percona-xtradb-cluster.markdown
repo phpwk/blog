@@ -2,6 +2,8 @@
 title: Using ProxySQL to Access and Manage Percona XtraDB Cluster
 date: 2016-12-09T10:00:54+07:00
 excerpt: "We will use ProxySQL as a gateway to access our Percona XtraDB Cluster. ProxySQL is a high performance SQL proxy."
+featured_image: images/pxdbc-logo.png
+featured_image_class: contain bg-center
 header:
   overlay_image: pxdbc-logo.png
   overlay_filter: 0.7
@@ -14,12 +16,12 @@ We will use ProxySQL as a gateway to access our Percona XtraDB Cluster. ProxySQL
 
 ### Node configuration
 
-|Node    |Host    |IP           |
-|:-------|:-------|:------------|
-|Node 1  |db1     |192.168.50.31|
-|Node 2  |db2     |192.168.50.32|
-|Node 3  |db3     |192.168.50.33|
-|Node 4  |proxysql|192.168.50.34|
+| Node   | Host     | IP            |
+| :----- | :------- | :------------ |
+| Node 1 | db1      | 192.168.50.31 |
+| Node 2 | db2      | 192.168.50.32 |
+| Node 3 | db3      | 192.168.50.33 |
+| Node 4 | proxysql | 192.168.50.34 |
 
 ### Prerequisites
 
@@ -27,32 +29,31 @@ We will use ProxySQL as a gateway to access our Percona XtraDB Cluster. ProxySQL
 2. Update CentOS 7
 3. Open firewall for TCP ports 6033:
 
-        $ ansible -i hosts -bkKv proxysql -m firewalld -a 'port=6033/tcp permanent=true state=enabled immediate=yes'
+        ansible -i hosts -bkKv proxysql -m firewalld -a 'port=6033/tcp permanent=true state=enabled immediate=yes'
 
 4. Disable or set SELinux to Permissive, set option below in **/etc/selinux/config** and **/etc/sysconfig/selinux**:
 
         SELINUX=disabled
 
-  and then reboot.
-5. Remove another MySQL installation:
+and then reboot. 5. Remove another MySQL installation:
 
-        $ ansible -bkKv -i hosts proxysql -m yum -a 'name=mysql-community-* state=removed'
+        ansible -bkKv -i hosts proxysql -m yum -a 'name=mysql-community-* state=removed'
 
 ### Installation from Percona Repository
 
 1. Install Percona Repository:
 
-        $ ansible -bkKv -i hosts proxysql -m command -a '/usr/bin/yum -y install http://www.percona.com/downloads/percona-release/redhat/0.1-4/percona-release-0.1-4.noarch.rpm creates=/etc/yum.repos.d/percona-release.repo'
+        ansible -bkKv -i hosts proxysql -m command -a '/usr/bin/yum -y install http://www.percona.com/downloads/percona-release/redhat/0.1-4/percona-release-0.1-4.noarch.rpm creates=/etc/yum.repos.d/percona-release.repo'
 
 2. Install ProxySQL:
 
-        $ ansible -bkKv -i hosts proxysql -m yum -a 'name=proxysql state=present'
+        ansible -bkKv -i hosts proxysql -m yum -a 'name=proxysql state=present'
 
-3. Change default credential configuration to __/etc/proxysql.cnf__:
+3. Change default credential configuration to **/etc/proxysql.cnf**:
 
         admin_credentials="admin:tempP455wd@"
 
-4. Also change the default credential and host configuration in __/etc/proxysql-admin.cnf__:
+4. Also change the default credential and host configuration in **/etc/proxysql-admin.cnf**:
 
         export PROXYSQL_USERNAME="admin"
         export PROXYSQL_PASSWORD="tempP455wd@"
@@ -65,14 +66,13 @@ We will use ProxySQL as a gateway to access our Percona XtraDB Cluster. ProxySQL
 
 6. Start ProxySQL service:
 
-        $ ansible -bkKv -i hosts proxysql -m systemd -a 'name=proxysql state=started'
-
+        ansible -bkKv -i hosts proxysql -m systemd -a 'name=proxysql state=started'
 
 ## Manual Configuration
 
 1. Install MySQL client (if doesn't exist):
 
-        $ ansible -bkKv -i hosts proxysql -m yum -a 'name=Percona-XtraDB-Cluster-client-57 state=present' 
+        ansible -bkKv -i hosts proxysql -m yum -a 'name=Percona-XtraDB-Cluster-client-57 state=present'
 
 2. Login to ProxySQL Admin Module:
 
@@ -127,12 +127,12 @@ We will use ProxySQL as a gateway to access our Percona XtraDB Cluster. ProxySQL
 
 4. **Note**: ProxySQL configuration can run from three different areas:
 
-    * MEMORY (your current working place)
-    * RUNTIME (the production settings)
-    * DISK (durable configuration, saved inside an SQLITE database)
+    - MEMORY (your current working place)
+    - RUNTIME (the production settings)
+    - DISK (durable configuration, saved inside an SQLITE database)
 
-  When you change a parameter, you change it in MEMORY area. That is done by design to allow you to test the changes before pushing to production (RUNTIME), or save them to disk.
- 
+When you change a parameter, you change it in MEMORY area. That is done by design to allow you to test the changes before pushing to production (RUNTIME), or save them to disk.
+
 ### Adding cluster nodes to ProxySQL
 
 1. To configure the backend Percona XtraDB Cluster nodes in ProxySQL, insert corresponding records into the **mysql_servers** table.
@@ -233,7 +233,7 @@ ProxySQL must have users that can access backend nodes to manage connections.
         +----------+-----------+
         1 row in set (0.00 sec)
 
-4. Nonetheless, it is easily possible to hash the passwords in mysql_users table, both in-memory and on-disk. It is enough to copy users from _RUNTIME_, for example running _SAVE MYSQL USERS FROM RUNTIME_ after _LOAD MYSQL USERS TO RUNTIME_, and then _SAVE MYSQL USERS TO DISK_ (recommended).[2]
+4. Nonetheless, it is easily possible to hash the passwords in mysql*users table, both in-memory and on-disk. It is enough to copy users from \_RUNTIME*, for example running _SAVE MYSQL USERS FROM RUNTIME_ after _LOAD MYSQL USERS TO RUNTIME_, and then _SAVE MYSQL USERS TO DISK_ (recommended).[2]
 
         mysql@proxysql> SAVE MYSQL USERS FROM RUNTIME;
         Query OK, 0 rows affected (0.00 sec)
@@ -268,7 +268,6 @@ ProxySQL must have users that can access backend nodes to manage connections.
 
         mysql@proxysql>
 
-
 6. To provide read/write access to the cluster for ProxySQL, add this user on one of the Percona XtraDB Cluster nodes:
 
         mysql@db2> CREATE USER 'sbuser'@'192.168.50.34' IDENTIFIED BY 'sbP455wd@';
@@ -283,8 +282,8 @@ Default ProxySQL cannot detect a node which is not in **Synced** state. To monit
 
 1. The following example shows how you can load the script for default ProxySQL configuration:
 
-        mysql@proxysql> INSERT INTO scheduler(id,active,interval_ms,filename,arg1,arg2,arg3,arg4,arg5) 
-            VALUES 
+        mysql@proxysql> INSERT INTO scheduler(id,active,interval_ms,filename,arg1,arg2,arg3,arg4,arg5)
+            VALUES
             (1,1,10000,'/usr/bin/proxysql_galera_checker',0,0,3,1,'/var/lib/proxysql/proxysql_galera_checker.log');
 
 2. To load the scheduler changes into the runtime space:
@@ -304,7 +303,7 @@ Default ProxySQL cannot detect a node which is not in **Synced** state. To monit
                arg3: 3
                arg4: 1
                arg5: /var/lib/proxysql/proxysql_galera_checker.log
-            comment: 
+            comment:
         1 row in set (0.00 sec)
 
 4. To check the status of available nodes, run the following command:
@@ -320,18 +319,19 @@ Default ProxySQL cannot detect a node which is not in **Synced** state. To monit
         3 rows in set (0.00 sec)
 
 5. **Note**: Each node can have the following status:
-    * __ONLINE__: backend node is fully operational.
-    * __SHUNNED__: backend node is temporarily taken out of use, because either too many connection errors hapenned in a short time, or replication lag exceeded the allowed threshold.
-    * __OFFLINE_SOFT__: new incoming connections aren’t accepted, while existing connections are kept until they become inactive. In other words, connections are kept in use until the current transaction is completed. This allows to gracefully detach a backend node.
-    * __OFFLINE_HARD__: existing connections are dropped, and new incoming connections aren’t accepted. This is equivalent to deleting the node from a hostgroup, or temporarily taking it out of the hostgroup for maintenance.
+    - **ONLINE**: backend node is fully operational.
+    - **SHUNNED**: backend node is temporarily taken out of use, because either too many connection errors hapenned in a short time, or replication lag exceeded the allowed threshold.
+    - **OFFLINE_SOFT**: new incoming connections aren’t accepted, while existing connections are kept until they become inactive. In other words, connections are kept in use until the current transaction is completed. This allows to gracefully detach a backend node.
+    - **OFFLINE_HARD**: existing connections are dropped, and new incoming connections aren’t accepted. This is equivalent to deleting the node from a hostgroup, or temporarily taking it out of the hostgroup for maintenance.
 
 ### Testing Cluster with sysbench
 
 1. Install **sysbench** from Percona software repositories:
 
-        $ ansible -bkKv -i hosts proxysql -m yum -a 'name=sysbench state=present'
+          ansible -bkKv -i hosts proxysql -m yum -a 'name=sysbench state=present'
 
-  **Note**: **sysbench** requires ProxySQL client user credentials that you created in _Creating ProxySQL Client User_.
+    **Note**: **sysbench** requires ProxySQL client user credentials that you created in _Creating ProxySQL Client User_.
+
 2. Create the database that will be used for testing on one of the Percona XtraDB Cluster nodes:
 
         mysql@db3> CREATE DATABASE sbtest;
@@ -416,7 +416,7 @@ ProxySQL will automatically detect if a node is not available or not synced with
 
 2. To test problem detection and fail-over mechanism, shut down Node 3:
 
-        $ ansible -bkKv -i hosts db3 -m systemd -a 'name=mysql state=stopped'
+        ansible -bkKv -i hosts db3 -m systemd -a 'name=mysql state=stopped'
 
 3. ProxySQL will detect that the node is down and update its status to **OFFLINE_SOFT**:
 
@@ -432,7 +432,7 @@ ProxySQL will automatically detect if a node is not available or not synced with
 
 4. Now start Node 3 again:
 
-        $ ansible -bkKv -i hosts db3 -m systemd -a 'name=mysql state=stopped'
+        ansible -bkKv -i hosts db3 -m systemd -a 'name=mysql state=stopped'
 
 5. The script will detect the change and mark the node as ONLINE:
 

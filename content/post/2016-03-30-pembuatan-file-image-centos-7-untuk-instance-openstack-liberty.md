@@ -1,13 +1,13 @@
 ---
 layout: single
 title: Pembuatan File Image CentOS 7 Untuk Instance OpenStack Liberty
-modified:
-categories: 
+date: 2016-03-30T18:20:17+07:00
 excerpt:
+modified:
+categories:
 tags: []
 image:
   feature:
-date: 2016-03-30T18:20:17+07:00
 comments: true
 ---
 
@@ -20,7 +20,7 @@ untuk digunakan di OpenStack Liberty.
 ## Persiapan Host Environment
 
 Host yang kita gunakan untuk membuat _image_ adalah host dengan sistem operasi
-CentOS 7. Pastikan sudah terinstall virtualisasi KVM/__libvirtd__ dan _tools_
+CentOS 7. Pastikan sudah terinstall virtualisasi KVM/**libvirtd** dan _tools_
 yang diperlukan
 
     sudo yum install qemu-kvm qemu-img virt-manager libvirt libvirt-python libvirt-client virt-install virt-viewer
@@ -40,82 +40,82 @@ ke dalam direktori FTP tersebut
 
 Berikut ini adalah contoh isi dari file _kickstart_ yang akan kita gunakan.
 
-	#version=RHEL7
-	# System authorization information
-	auth --enableshadow --passalgo=sha512
+    #version=RHEL7
+    # System authorization information
+    auth --enableshadow --passalgo=sha512
 
-	# Specify installation
-	install
-	# Run the Setup Agent on first boot
-	firstboot --enable
-	# Text mode (no graphical mode)
-	text
-	# Skip graphics
-	skipx
-	# Agree to EULA
-	eula --agreed
-	# Logging
-	logging --level=info
+    # Specify installation
+    install
+    # Run the Setup Agent on first boot
+    firstboot --enable
+    # Text mode (no graphical mode)
+    text
+    # Skip graphics
+    skipx
+    # Agree to EULA
+    eula --agreed
+    # Logging
+    logging --level=info
 
-	# Installation files FTP directory
-	url --url="ftp://<your FTP server>/repos/centos/7/"
+    # Installation files FTP directory
+    url --url="ftp://<your FTP server>/repos/centos/7/"
 
-	# Language support
-	lang en_US.UTF-8
-	# Keyboard
-	keyboard --vckeymap=us --xlayouts='us'
+    # Language support
+    lang en_US.UTF-8
+    # Keyboard
+    keyboard --vckeymap=us --xlayouts='us'
 
-	# Network
-	network --device eth0 --bootproto dhcp --noipv6 --hostname <hostname>
+    # Network
+    network --device eth0 --bootproto dhcp --noipv6 --hostname <hostname>
 
-	# Timezone
-	timezone  Asia/Jakarta --isUtc --ntpservers=<your NTP server>
+    # Timezone
+    timezone  Asia/Jakarta --isUtc --ntpservers=<your NTP server>
 
-	# Ignore other disk
-	ignoredisk --only-use=vda
-	# Zero MBR
-	zerombr
-	# Bootloader
-	bootloader  --append=" crashkernel=auto" --location=mbr --boot-drive=vda
-	# Remove all partitions
-	clearpart --all --initlabel --drives=vda
-	# Create partitions on the system
-	part / --asprimary --fstype="ext4" --grow --size=1
-	#part swap --recommended
+    # Ignore other disk
+    ignoredisk --only-use=vda
+    # Zero MBR
+    zerombr
+    # Bootloader
+    bootloader  --append=" crashkernel=auto" --location=mbr --boot-drive=vda
+    # Remove all partitions
+    clearpart --all --initlabel --drives=vda
+    # Create partitions on the system
+    part / --asprimary --fstype="ext4" --grow --size=1
+    #part swap --recommended
 
-	# No root password
-	rootpw --lock
-	# User
-	user --groups=wheel --name=centos --password=<your password hash> --iscrypted --gecos="Centos Cloud User"
+    # No root password
+    rootpw --lock
+    # User
+    user --groups=wheel --name=centos --password=<your password hash> --iscrypted --gecos="Centos Cloud User"
 
-	# Enabled servies
-	services --enabled=NetworkManager,sshd,chrony
-	# SElinux permissive
-	selinux --permissive
-	# Firewall
-	firewall --service=ssh
+    # Enabled servies
+    services --enabled=NetworkManager,sshd,chrony
+    # SElinux permissive
+    selinux --permissive
+    # Firewall
+    firewall --service=ssh
 
-	# Reboot after install
-	reboot
+    # Reboot after install
+    reboot
 
-	# Packages installation
-	%packages
-	@core
-	chrony
-	bash-completion
-	kexec-tools
-	net-tools
-	telnet
-	wget
-	git
-	vim
-	%end
+    # Packages installation
+    %packages
+    @core
+    chrony
+    bash-completion
+    kexec-tools
+    net-tools
+    telnet
+    wget
+    git
+    vim
+    %end
 
-	%addon com_redhat_kdump --enable --reserve-mb='auto'
-	%end
+    %addon com_redhat_kdump --enable --reserve-mb='auto'
+    %end
 
-	%post
-	%end
+    %post
+    %end
 
 ## Instalasi Sistem Operasi CentOS 7 ke dalam File Image
 
@@ -129,22 +129,21 @@ Setelah itu jalankan instalasi sistem operasi CentOS 7 ke dalam file _image_
 tersebut. Pastikan sudah mengunduh file CentOS-7-x86_64-Minimal-1511.iso dari
 situs resmi CentOS.
 
-    sudo virt-install --virt-type kvm --name centos-7 --ram 1024 --disk ./centos-7.qcow2,format=qcow2 --network network=default --graphics none --os-type=linux --os-variant=rhel7 --console pty,target_type=serial --extra-args="console=ttyS0,115200n8 serial ksdevice=eth0 ip=dhcp ks=ftp://<your FTP server>/repos/kickstarts/centos-7.cfg" --location=./CentOS-7-x86_64-Minimal-1511.iso 
+    sudo virt-install --virt-type kvm --name centos-7 --ram 1024 --disk ./centos-7.qcow2,format=qcow2 --network network=default --graphics none --os-type=linux --os-variant=rhel7 --console pty,target_type=serial --extra-args="console=ttyS0,115200n8 serial ksdevice=eth0 ip=dhcp ks=ftp://<your FTP server>/repos/kickstarts/centos-7.cfg" --location=./CentOS-7-x86_64-Minimal-1511.iso
 
 Perintah tersebut akan menjalankan sebuah terminal serial yang akan menunjukkan
-tahapan instalasi otomatis sistem operasi CentOS 7 ke dalam file _image_ CentOS
-7. Pada saat instalasi selesai akan muncul permintaan login dari _virtual
-   machine_ yang telah kita instal sistem operasi CentOS 7 tersebut.
+tahapan instalasi otomatis sistem operasi CentOS 7 ke dalam file _image_ CentOS 7. Pada saat instalasi selesai akan muncul permintaan login dari _virtual
+machine_ yang telah kita instal sistem operasi CentOS 7 tersebut.
 
 ## Bug pada Package Cloud-Init dari CentOS 7
 
-Package __cloud-init__ 0.7.5 dari CentOS tidak dapat mengambil metadata dari
+Package **cloud-init** 0.7.5 dari CentOS tidak dapat mengambil metadata dari
 OpenStack sehingga pada saat pembuatan instance informasi seperti SSH key tidak
 terinstal ke dalam instance. Hal ini menyebabkan kita tidak bisa melakukan
 login SSH ke dalam instance CentOS OpenStack. Permasalahan ini disebabkan oleh
 [bug](https://bugs.launchpad.net/mos/+bug/1406286) yang ada di dalam package
-__cloud-init__ 0.7.5 dari CentOS. Pada tutorial ini terdapat salah satu cara 
-untuk menghindari bug tersebut dengan menggunakan package __cloud-init__ 0.7.6 
+**cloud-init** 0.7.5 dari CentOS. Pada tutorial ini terdapat salah satu cara
+untuk menghindari bug tersebut dengan menggunakan package **cloud-init** 0.7.6
 dari Red-Hat.
 
     wget http://ftp.redhat.com/pub/redhat/linux/enterprise/7Server/en/RH-COMMON/SRPMS/cloud-init-0.7.6-2.el7.src.rpm
@@ -191,10 +190,10 @@ diperlukan.
 
     sudo sed -i 's/enabled=1/enabled=0/' /etc/yum.repos.d/epel.repo
 
-Ubah file konfigurasi __cloud-init__ untuk melakukan penyesuaian agar bisa
+Ubah file konfigurasi **cloud-init** untuk melakukan penyesuaian agar bisa
 digunakan pada OpenStack Liberty.
 
-    sudo vi /etc/cloud/cloud.cfg 
+    sudo vi /etc/cloud/cloud.cfg
     ...
     # gunakan opsi ini jika ingin mengaktifkan ssh menggunakan user root
     disable_root: 0
@@ -246,7 +245,7 @@ Akses instance CentOS baru kita.
 
 ## Referensi
 
-* [Creating CentOS and Fedora images ready for Openstack](https://www.rdoproject.org/resources/creating-centos-and-fedora-images-ready-for-openstack/)
-* [Creating Centos-7 Image for Openstack](http://www.adminz.in/2014/10/creating-centos-7-image-for-openstack.html)
-* [CentOS 6 cloud image with cloud-init-0.7.5 can not retrieve OpenStack metadata](https://bugs.launchpad.net/mos/+bug/1406286)
-* [Linux : How to install source rpm on RHEL/CentOS](http://www.itechlounge.net/2012/12/linux-how-to-install-source-rpm-on-rhelcentos/)
+- [Creating CentOS and Fedora images ready for Openstack](https://www.rdoproject.org/resources/creating-centos-and-fedora-images-ready-for-openstack/)
+- [Creating Centos-7 Image for Openstack](http://www.adminz.in/2014/10/creating-centos-7-image-for-openstack.html)
+- [CentOS 6 cloud image with cloud-init-0.7.5 can not retrieve OpenStack metadata](https://bugs.launchpad.net/mos/+bug/1406286)
+- [Linux : How to install source rpm on RHEL/CentOS](http://www.itechlounge.net/2012/12/linux-how-to-install-source-rpm-on-rhelcentos/)

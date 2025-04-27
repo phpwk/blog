@@ -2,6 +2,8 @@
 title: Building Linux Cluster for HPC using Ansible and SLURM
 date: 2016-11-07T06:06:24+07:00
 excerpt: ""
+featured_image: images/sample-image-3.jpg
+featured_image_class: contain bg-center
 header:
   overlay_image: sample-image-3.jpg
   caption: "Photo credit: [**WeGraphics**](http://wegraphics.net/downloads/free-ultimate-blurred-background-pack/)"
