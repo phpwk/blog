@@ -1,7 +1,7 @@
 ---
 title: "Create Kubernetes Cluster in Proxmox Using Talos"
 date: 2025-04-28T14:31:17+07:00
-tags: ["kubernetes", "talos", "proxmox"]
+tags: ["kubernetes", "talos", "proxmox", "homelab"]
 draft: true
 ---
 
