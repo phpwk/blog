@@ -1,6 +1,7 @@
 ---
-title: "2025 06 20 Upgrading Self Hosted Stalwart Mail Experience"
+title: "Upgrading Self Hosted Stalwart Mail Experience"
 date: 2025-06-20T08:45:32+07:00
+tags: ["stalwart mail", "self hosted", "upgrade"]
 draft: false
 ---
 

@@ -1,7 +1,8 @@
 ---
-title: "2025 04 28 Create Kubernetes Cluster in Proxmox Using Talos"
+title: "Create Kubernetes Cluster in Proxmox Using Talos"
 date: 2025-04-28T14:31:17+07:00
-draft: false
+tags: ["kubernetes", "talos", "proxmox"]
+draft: true
 ---
 
 ## Introduction
