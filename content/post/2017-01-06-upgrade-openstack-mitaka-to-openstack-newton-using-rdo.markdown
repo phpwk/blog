@@ -9,9 +9,27 @@ header:
   overlay_filter: 0.7
 ---
 
-My OpenStack development environment is build using RDO's **packstack** utility and consists of three nodes: one controller, network, and compute node, and two compute nodes. RDO website offers two scenario for [upgrading](https://www.rdoproject.org/install/upgrading-rdo/) OpenStack Mitaka to OpenStack Newton. The first scenario involves taking down all of the OpenStack services at once and will not bring them back up until the upgrade process is completed. The second scenario upgrades each OpenStack service one by one to avoid downtime by performing rolling upgrades of the compute hosts, taking advantage of the fact that nova-compute from Mitaka can communicate with a Newton control plane.
+My OpenStack development environment is build using RDO's **packstack** utility
+and consists of three nodes: one controller, network, and compute node, and two
+compute nodes. RDO website offers two scenario for
+[upgrading](https://www.rdoproject.org/install/upgrading-rdo/) OpenStack Mitaka
+to OpenStack Newton. The first scenario involves taking down all of the
+OpenStack services at once and will not bring them back up until the upgrade
+process is completed. The second scenario upgrades each OpenStack service one
+by one to avoid downtime by performing rolling upgrades of the compute hosts,
+taking advantage of the fact that nova-compute from Mitaka can communicate with
+a Newton control plane.
 
-My development environment is simple, so I choose the first scenario to upgrade my OpenStack installation. Each node which runs the OpenStack services actually a virtual machine (VM) running above multiple type of hypervisors and operating systems. The controller node is a CentOS 7 VM running above KVM in CentOS 7 host, the first compute node is a CentOS 7 VM running above KVM in ArchLinux host, and the second compute node is a CentOS 7 VM running above BHYVE in FreeBSD 10 host. The second compute node doesn't have capabilities to do virtualization so in this compute node I use [Docker](https://www.docker.com/) as compute driver using a OpenStack project called [Nova-Docker](https://github.com/openstack/nova-docker).
+My development environment is simple, so I choose the first scenario to upgrade
+my OpenStack installation. Each node which runs the OpenStack services actually
+a virtual machine (VM) running above multiple type of hypervisors and operating
+systems. The controller node is a CentOS 7 VM running above KVM in CentOS 7
+host, the first compute node is a CentOS 7 VM running above KVM in ArchLinux
+host, and the second compute node is a CentOS 7 VM running above BHYVE in
+FreeBSD 10 host. The second compute node doesn't have capabilities to do
+virtualization so in this compute node I use [Docker](https://www.docker.com/)
+as compute driver using a OpenStack project called
+[Nova-Docker](https://github.com/openstack/nova-docker).
 
 ## The Upgrades
 
@@ -19,7 +37,8 @@ The upgrade process is running smoothly at first
 
 ### Disabling all OpenStack Services
 
-Install **openstack-utils** on all standard nodes to manage OpenStack services with **openstack-service** command
+Install **openstack-utils** on all standard nodes to manage OpenStack services
+with **openstack-service** command
 
         sudo yum install openstack-utils
 
@@ -41,18 +60,26 @@ Then update the packages
 
         sudo yum update
 
-Wait until the package upgrade is completed.
-Review the resulting configuration files. The upgraded packages will have installed .rpmnew files appropriate to the Newton version of the service. New versions of OpenStack services may deprecate certain configuration options. You should also review your OpenStack logs for any deprecation warnings, because these may cause problems during future upgrades. For more information on the new, updated and deprecated configuration options for each service, see Configuration Reference available from <http://docs.openstack.org/newton/config-reference>.
-Perform the package upgrade on each node in your environment.
+Wait until the package upgrade is completed. Review the resulting configuration
+files. The upgraded packages will have installed .rpmnew files appropriate to
+the Newton version of the service. New versions of OpenStack services may
+deprecate certain configuration options. You should also review your OpenStack
+logs for any deprecation warnings, because these may cause problems during
+future upgrades. For more information on the new, updated and deprecated
+configuration options for each service, see Configuration Reference available
+from <http://docs.openstack.org/newton/config-reference>. Perform the package
+upgrade on each node in your environment.
 
 ### Performing Synchronization of all Databases
 
 After we upgrade the packages, then we have to upgrade the database of each service.
-Flush expired tokens in the Identity service to decrease the time required to synchronize the database
+Flush expired tokens in the Identity service to decrease the time required to
+synchronize the database
 
         sudo keystone-manage token_flush
 
-Upgrade the database schema for each service that uses the database. Run the following commands on the node hosting the service’s database.
+Upgrade the database schema for each service that uses the database. Run the
+following commands on the node hosting the service’s database.
 
 Table 1. Commands to Synchronize OpenStack Service Databases
 
@@ -69,7 +96,8 @@ Table 1. Commands to Synchronize OpenStack Service Databases
 
 ### Enabling all OpenStack Services
 
-The final step enables the OpenStack services on the node. Restart all OpenStack services:
+The final step enables the OpenStack services on the node. Restart all
+OpenStack services:
 
         sudo openstack-service start
 
