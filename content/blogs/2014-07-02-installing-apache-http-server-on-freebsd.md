@@ -8,6 +8,10 @@ tags:
 comments: true
 ---
 
+# Installing Apache HTTP Server on FreeBSD
+
+## Installation
+
 ### Installation using FreeBSD ports
 
 Login as root, then to make sure our server's hostname can be identified locally we need to edit _/etc/hosts_.
