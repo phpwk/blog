@@ -2,7 +2,7 @@
 title: "Day 2 with my custom build NAS server for the homelab"
 date: 2026-10-01T20:00:00+07:00
 tags: ["homelab", "truenas", "proxmox", "zfs", "backup", "incus"]
-draft: true
+draft: false
 ---
 
 ## Symptom
